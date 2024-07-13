@@ -1,37 +1,16 @@
-import reactImg from "./assets/react-core-concepts.png";
+import { useState } from 'react';
 import { CORE_CONCEPTS } from "./data.js";
-
-const reatcDesc = ["fundemental", "core", "crucial"];
-
-function random(num) {
-  return Math.floor(Math.random() * num);
-}
-
-function Header() {
-  const desc = reatcDesc[random(reatcDesc.length)];
-  return (
-    <header>
-      <img src={reactImg} alt="Stylized atom" />
-      <h1>React Essentials</h1>
-      <p>
-        {desc} React concepts you will need for almost any app you are going to
-        build!
-      </p>
-    </header>
-  );
-}
-
-function CoreConcept({image, para, title}) {
-  return (
-    <li>
-      <img src={image} alt="..." />
-      <h3>{title}</h3>
-      <p>{para}</p>
-    </li>
-  );
-}
+import { Header } from "./Components/Header.jsx";
+import { CoreConcept } from "./Components/CoreConcept.jsx";
+import { TapButton } from "./Components/TapButton.jsx";
+import { EXAMPLES } from './data.js';
 
 function App() {
+  const [selectedTopic , setSelectedTopic] = useState();
+  function handleSelect(selectedButton) {
+    setSelectedTopic(selectedButton)
+  } 
+
   return (
     <div>
       <Header></Header>
@@ -39,11 +18,32 @@ function App() {
         <section id="core-concepts">
           <h2>Core Concepts</h2>
           <ul>
-            <CoreConcept {...CORE_CONCEPTS[0]}></CoreConcept>
-            <CoreConcept {...CORE_CONCEPTS[1]}></CoreConcept>
-            <CoreConcept {...CORE_CONCEPTS[2]}></CoreConcept>
-            <CoreConcept {...CORE_CONCEPTS[3]}></CoreConcept>
+            {CORE_CONCEPTS.map((x) => <CoreConcept {...x}></CoreConcept>)}
           </ul>
+        </section>
+        <section id="examples">
+          <h2>exampels</h2>
+          <menu>
+            <TapButton isSelected = {selectedTopic === "components"} onSelect={() => handleSelect("components")}>Components</TapButton>
+            <TapButton isSelected = {selectedTopic === "jsx"} onSelect={() => handleSelect("jsx")}>JSX</TapButton>
+            <TapButton isSelected = {selectedTopic === "props"} onSelect={() => handleSelect("props")}>Props</TapButton>
+            <TapButton isSelected = {selectedTopic === "state"} onSelect={() => handleSelect("state")}>State</TapButton>
+          </menu>
+          {selectedTopic
+            ? 
+          <div id="tab-content">
+            <h3>{EXAMPLES[selectedTopic].title}</h3>
+            <p> {EXAMPLES[selectedTopic].description}</p>
+            <pre>
+              <code>
+                {EXAMPLES[selectedTopic].code}
+              </code>
+            </pre>
+          </div>
+            :
+            <p>Please select a topic</p>
+         }
+
         </section>
       </main>
     </div>
@@ -51,3 +51,4 @@ function App() {
 }
 
 export default App;
+
